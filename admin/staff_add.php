@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="input-group">
             <label for="address">Address</label>
-            <textarea id="address" name="address" rows="3" style="width: 100%;"></textarea>
+            <textarea id="address" name="address" rows="3"></textarea>
         </div>
         <div class="input-group">
             <label for="role">Role</label>

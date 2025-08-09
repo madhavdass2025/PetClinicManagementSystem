@@ -7,7 +7,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
     exit();
 }
 
-// Get the current page name
+// Get the current page name to set the active class on the navigation link
 $current_page = basename($_SERVER['PHP_SELF']);
 ?>
 <!DOCTYPE html>
@@ -40,4 +40,4 @@ $current_page = basename($_SERVER['PHP_SELF']);
                 <a href="../logout.php">Logout</a>
             </div>
         </div>
-        <div class="content">
+        <div class="content" style="padding-top: 20px;">

@@ -20,7 +20,7 @@ require_once '../includes/db_connect.php';
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM lab_tests ORDER BY id DESC";
+            $sql = "SELECT * FROM lab_tests WHERE status = 'active' ORDER BY id DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
@@ -29,7 +29,7 @@ require_once '../includes/db_connect.php';
                     echo "<td>" . $row['id'] . "</td>";
                     echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                    echo "<td>" . $row['cost'] . "</td>";
+                    echo "<td>" . number_format($row['cost'], 2) . "</td>";
                     echo '<td>
                             <a href="lab_test_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
                             <a href="lab_test_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this lab test?\')">Delete</a>
@@ -37,7 +37,7 @@ require_once '../includes/db_connect.php';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No lab tests found.</td></tr>";
+                echo "<tr><td colspan='5'>No active lab tests found.</td></tr>";
             }
             ?>
         </tbody>

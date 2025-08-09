@@ -2,6 +2,10 @@
 include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: other_charges.php");
+    exit();
+}
 $charge_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -20,11 +24,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current charge data
-$sql = "SELECT * FROM other_charges WHERE id = ?";
+$sql = "SELECT * FROM other_charges WHERE id = ? AND status = 'active'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $charge_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    header("Location: other_charges.php?error=Charge not found");
+    exit();
+}
 $charge = $result->fetch_assoc();
 ?>
 
@@ -38,7 +46,7 @@ $charge = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $charge['cost'] ?>" required>
+            <input type="text" id="cost" name="cost" value="<?= $charge['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-primary">Update Charge</button>
     </form>

@@ -1,26 +1,21 @@
 <?php
 require_once '../includes/db_connect.php';
-session_start();
+include 'includes/header.php';
 
-// Check if the user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'Admin') {
-    header("Location: ../index.php?error=Access Denied");
+if (!isset($_GET['id'])) {
+    header("Location: other_charges.php");
     exit();
 }
+$charge_id = $_GET['id'];
 
-if (isset($_GET['id'])) {
-    $charge_id = $_GET['id'];
+// Soft delete the charge
+$sql = "UPDATE other_charges SET status = 'inactive' WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $charge_id);
 
-    $sql = "DELETE FROM other_charges WHERE id = ?";
-    $stmt = $conn->prepare($sql);
-    $stmt->bind_param("i", $charge_id);
-
-    if ($stmt->execute()) {
-        header("Location: other_charges.php?message=Charge deleted successfully");
-    } else {
-        header("Location: other_charges.php?error=Error deleting charge: " . $stmt->error);
-    }
+if ($stmt->execute()) {
+    header("Location: other_charges.php?message=Charge deleted successfully");
 } else {
-    header("Location: other_charges.php?error=No charge ID specified");
+    header("Location: other_charges.php?error=Error deleting charge: " . $stmt->error);
 }
 ?>

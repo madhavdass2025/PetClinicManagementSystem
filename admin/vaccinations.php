@@ -20,7 +20,7 @@ require_once '../includes/db_connect.php';
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM vaccinations ORDER BY id DESC";
+            $sql = "SELECT * FROM vaccinations WHERE status = 'active' ORDER BY id DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
@@ -29,7 +29,7 @@ require_once '../includes/db_connect.php';
                     echo "<td>" . $row['id'] . "</td>";
                     echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['details']) . "</td>";
-                    echo "<td>" . $row['cost'] . "</td>";
+                    echo "<td>" . number_format($row['cost'], 2) . "</td>";
                     echo '<td>
                             <a href="vaccination_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
                             <a href="vaccination_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this vaccination?\')">Delete</a>
@@ -37,7 +37,7 @@ require_once '../includes/db_connect.php';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No vaccinations found.</td></tr>";
+                echo "<tr><td colspan='5'>No active vaccinations found.</td></tr>";
             }
             ?>
         </tbody>

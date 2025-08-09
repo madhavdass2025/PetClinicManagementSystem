@@ -21,7 +21,8 @@ require_once '../includes/db_connect.php';
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM medicines ORDER BY id DESC";
+            // Only select active medicines
+            $sql = "SELECT * FROM medicines WHERE status = 'active' ORDER BY id DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
@@ -31,7 +32,7 @@ require_once '../includes/db_connect.php';
                     echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                     echo "<td>" . $row['stock_quantity'] . "</td>";
                     echo "<td>" . $row['reorder_level'] . "</td>";
-                    echo "<td>" . $row['price'] . "</td>";
+                    echo "<td>" . number_format($row['price'], 2) . "</td>";
                     echo '<td>
                             <a href="medicine_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
                             <a href="medicine_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this medicine?\')">Delete</a>
@@ -39,7 +40,7 @@ require_once '../includes/db_connect.php';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6'>No medicines found.</td></tr>";
+                echo "<tr><td colspan='6'>No active medicines found.</td></tr>";
             }
             ?>
         </tbody>

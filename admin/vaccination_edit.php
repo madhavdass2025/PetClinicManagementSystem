@@ -2,6 +2,10 @@
 include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: vaccinations.php");
+    exit();
+}
 $vaccination_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,11 +25,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current vaccination data
-$sql = "SELECT * FROM vaccinations WHERE id = ?";
+$sql = "SELECT * FROM vaccinations WHERE id = ? AND status = 'active'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $vaccination_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    header("Location: vaccinations.php?error=Vaccination not found");
+    exit();
+}
 $vaccination = $result->fetch_assoc();
 ?>
 
@@ -39,11 +47,11 @@ $vaccination = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="details">Details</label>
-            <textarea id="details" name="details" rows="4" style="width: 100%;"><?= htmlspecialchars($vaccination['details']) ?></textarea>
+            <textarea id="details" name="details" rows="4"><?= htmlspecialchars($vaccination['details']) ?></textarea>
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $vaccination['cost'] ?>" required>
+            <input type="text" id="cost" name="cost" value="<?= $vaccination['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-primary">Update Vaccination</button>
     </form>

@@ -19,7 +19,7 @@ require_once '../includes/db_connect.php';
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM other_charges ORDER BY id DESC";
+            $sql = "SELECT * FROM other_charges WHERE status = 'active' ORDER BY id DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
@@ -27,7 +27,7 @@ require_once '../includes/db_connect.php';
                     echo "<tr>";
                     echo "<td>" . $row['id'] . "</td>";
                     echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                    echo "<td>" . $row['cost'] . "</td>";
+                    echo "<td>" . number_format($row['cost'], 2) . "</td>";
                     echo '<td>
                             <a href="other_charge_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
                             <a href="other_charge_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this charge?\')">Delete</a>
@@ -35,7 +35,7 @@ require_once '../includes/db_connect.php';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='4'>No charges found.</td></tr>";
+                echo "<tr><td colspan='4'>No active charges found.</td></tr>";
             }
             ?>
         </tbody>

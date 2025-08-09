@@ -21,7 +21,7 @@ require_once '../includes/db_connect.php';
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM staff ORDER BY id DESC";
+            $sql = "SELECT * FROM staff WHERE status = 'active' ORDER BY id DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
@@ -34,12 +34,12 @@ require_once '../includes/db_connect.php';
                     echo "<td>" . htmlspecialchars($row['role']) . "</td>";
                     echo '<td>
                             <a href="staff_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
-                            <a href="staff_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this staff member? This will also delete their login account.\')">Delete</a>
+                            <a href="staff_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this staff member? Their login account will be disabled.\')">Delete</a>
                           </td>';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='6'>No staff members found.</td></tr>";
+                echo "<tr><td colspan='6'>No active staff members found.</td></tr>";
             }
             ?>
         </tbody>

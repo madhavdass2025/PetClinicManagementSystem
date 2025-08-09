@@ -29,11 +29,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="input-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4" style="width: 100%;"></textarea>
+            <textarea id="description" name="description" rows="4"></textarea>
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" required>
+            <input type="text" id="cost" name="cost" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-success">Add Lab Test</button>
     </form>

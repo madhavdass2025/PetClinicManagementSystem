@@ -2,6 +2,10 @@
 include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: staff.php");
+    exit();
+}
 $staff_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -51,11 +55,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current staff and user data
-$sql = "SELECT s.*, u.username FROM staff s LEFT JOIN users u ON s.id = u.staff_id WHERE s.id=?";
+$sql = "SELECT s.*, u.username FROM staff s LEFT JOIN users u ON s.id = u.staff_id WHERE s.id = ? AND s.status = 'active'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $staff_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    header("Location: staff.php?error=Staff member not found");
+    exit();
+}
 $staff = $result->fetch_assoc();
 ?>
 
@@ -78,7 +86,7 @@ $staff = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="address">Address</label>
-            <textarea id="address" name="address" rows="3" style="width: 100%;"><?= htmlspecialchars($staff['address']) ?></textarea>
+            <textarea id="address" name="address" rows="3"><?= htmlspecialchars($staff['address']) ?></textarea>
         </div>
         <div class="input-group">
             <label for="role">Role</label>

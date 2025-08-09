@@ -2,6 +2,10 @@
 include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: medicines.php");
+    exit();
+}
 $medicine_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -23,11 +27,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current medicine data
-$sql = "SELECT * FROM medicines WHERE id = ?";
+$sql = "SELECT * FROM medicines WHERE id = ? AND status = 'active'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $medicine_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    header("Location: medicines.php?error=Medicine not found");
+    exit();
+}
 $medicine = $result->fetch_assoc();
 ?>
 
@@ -41,7 +49,7 @@ $medicine = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4" style="width: 100%;"><?= htmlspecialchars($medicine['description']) ?></textarea>
+            <textarea id="description" name="description" rows="4"><?= htmlspecialchars($medicine['description']) ?></textarea>
         </div>
         <div class="input-group">
             <label for="stock_quantity">Stock Quantity</label>
@@ -53,7 +61,7 @@ $medicine = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="price">Price</label>
-            <input type="text" id="price" name="price" value="<?= $medicine['price'] ?>" required>
+            <input type="text" id="price" name="price" value="<?= $medicine['price'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-primary">Update Medicine</button>
     </form>

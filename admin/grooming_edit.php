@@ -2,6 +2,10 @@
 include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: grooming.php");
+    exit();
+}
 $service_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,11 +25,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current grooming service data
-$sql = "SELECT * FROM grooming_services WHERE id = ?";
+$sql = "SELECT * FROM grooming_services WHERE id = ? AND status = 'active'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $service_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    header("Location: grooming.php?error=Service not found");
+    exit();
+}
 $service = $result->fetch_assoc();
 ?>
 
@@ -39,11 +47,11 @@ $service = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4" style="width: 100%;"><?= htmlspecialchars($service['description']) ?></textarea>
+            <textarea id="description" name="description" rows="4"><?= htmlspecialchars($service['description']) ?></textarea>
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $service['cost'] ?>" required>
+            <input type="text" id="cost" name="cost" value="<?= $service['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-primary">Update Service</button>
     </form>

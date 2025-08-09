@@ -35,7 +35,7 @@ h2 {
     padding: 8px;
     border: 1px solid #ddd;
     border-radius: 3px;
-    box-sizing: border-box; /* To include padding in the width */
+    box-sizing: border-box;
 }
 
 .btn {

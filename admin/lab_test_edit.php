@@ -2,6 +2,10 @@
 include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
+if (!isset($_GET['id'])) {
+    header("Location: lab_tests.php");
+    exit();
+}
 $test_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -21,11 +25,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current lab test data
-$sql = "SELECT * FROM lab_tests WHERE id = ?";
+$sql = "SELECT * FROM lab_tests WHERE id = ? AND status = 'active'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $test_id);
 $stmt->execute();
 $result = $stmt->get_result();
+if ($result->num_rows === 0) {
+    header("Location: lab_tests.php?error=Lab test not found");
+    exit();
+}
 $test = $result->fetch_assoc();
 ?>
 
@@ -39,11 +47,11 @@ $test = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4" style="width: 100%;"><?= htmlspecialchars($test['description']) ?></textarea>
+            <textarea id="description" name="description" rows="4"><?= htmlspecialchars($test['description']) ?></textarea>
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $test['cost'] ?>" required>
+            <input type="text" id="cost" name="cost" value="<?= $test['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-primary">Update Lab Test</button>
     </form>

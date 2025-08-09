@@ -31,7 +31,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="input-group">
             <label for="description">Description</label>
-            <textarea id="description" name="description" rows="4" style="width: 100%;"></textarea>
+            <textarea id="description" name="description" rows="4"></textarea>
         </div>
         <div class="input-group">
             <label for="stock_quantity">Stock Quantity</label>
@@ -43,7 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="input-group">
             <label for="price">Price</label>
-            <input type="text" id="price" name="price" required>
+            <input type="text" id="price" name="price" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
         </div>
         <button type="submit" class="btn btn-success">Add Medicine</button>
     </form>
