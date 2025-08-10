@@ -6,7 +6,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $sql = "SELECT * FROM users WHERE username = ? AND status = 'active'";
+    // Using prepared statements to prevent SQL injection
+    $sql = "SELECT * FROM admin_user WHERE username = ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param("s", $username);
     $stmt->execute();
@@ -15,12 +16,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        if (password_verify($password, $user['password'])) {
+        // Plain text password check as requested by user
+        if ($password === $user['password']) {
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
-            $_SESSION['role'] = $user['role'];
+            $_SESSION['role'] = $user['type']; // 'type' column seems to hold the role
 
-            switch ($user['role']) {
+            // Redirect based on role
+            switch ($user['type']) {
                 case 'Admin':
                     header("Location: admin/dashboard.php");
                     break;

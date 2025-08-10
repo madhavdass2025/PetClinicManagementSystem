@@ -8,7 +8,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "INSERT INTO other_charges (name, cost) VALUES (?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sd", $name, $cost);
+    $stmt->bind_param("ss", $name, $cost);
 
     if ($stmt->execute()) {
         echo "<script>alert('New charge added successfully'); window.location.href='other_charges.php';</script>";
@@ -28,7 +28,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
+            <input type="text" id="cost" name="cost" required>
         </div>
         <button type="submit" class="btn btn-success">Add Charge</button>
     </form>

@@ -6,12 +6,12 @@ if (!isset($_GET['id'])) {
     header("Location: grooming.php");
     exit();
 }
-$service_id = $_GET['id'];
+$grooming_id = $_GET['id'];
 
 // Soft delete the service
-$sql = "UPDATE grooming_services SET status = 'inactive' WHERE id = ?";
+$sql = "UPDATE grooming SET cancel = '1' WHERE GId = ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $service_id);
+$stmt->bind_param("i", $grooming_id);
 
 if ($stmt->execute()) {
     header("Location: grooming.php?message=Service deleted successfully");

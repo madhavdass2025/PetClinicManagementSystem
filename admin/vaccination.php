@@ -13,31 +13,33 @@ require_once '../includes/db_connect.php';
             <tr>
                 <th>ID</th>
                 <th>Name</th>
-                <th>Details</th>
-                <th>Cost</th>
+                <th>Amount</th>
+                <th>Type</th>
+                <th>Duration (days)</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM vaccinations WHERE status = 'active' ORDER BY id DESC";
+            $sql = "SELECT * FROM vaccination WHERE cancel = '0' ORDER BY VId DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . $row['id'] . "</td>";
+                    echo "<td>" . $row['VId'] . "</td>";
                     echo "<td>" . htmlspecialchars($row['name']) . "</td>";
-                    echo "<td>" . htmlspecialchars($row['details']) . "</td>";
-                    echo "<td>" . number_format($row['cost'], 2) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['type']) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['duration']) . "</td>";
                     echo '<td>
-                            <a href="vaccination_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
-                            <a href="vaccination_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this vaccination?\')">Delete</a>
+                            <a href="vaccination_edit.php?id=' . $row['VId'] . '" class="btn btn-primary">Edit</a>
+                            <a href="vaccination_delete.php?id=' . $row['VId'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this vaccination?\')">Delete</a>
                           </td>';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No active vaccinations found.</td></tr>";
+                echo "<tr><td colspan='6'>No active vaccinations found.</td></tr>";
             }
             ?>
         </tbody>

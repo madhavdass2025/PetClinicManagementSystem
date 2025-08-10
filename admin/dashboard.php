@@ -7,20 +7,20 @@ require_once '../includes/db_connect.php';
 
 <div class="card">
     <h3>Welcome to the Admin Dashboard</h3>
-    <p>From here, you can manage all the master data for the clinic, including medicines, lab tests, staff, and more. Use the navigation on the left to get started.</p>
+    <p>From here, you can manage all the master data for the clinic, including doctors, staff, medicines, and other services, based on the provided database schema.</p>
 </div>
 
 <?php
 // Fetch some stats for the dashboard
-$total_staff = $conn->query("SELECT COUNT(*) as count FROM staff WHERE status = 'active'")->fetch_assoc()['count'];
-$total_medicines = $conn->query("SELECT COUNT(*) as count FROM medicines WHERE status = 'active'")->fetch_assoc()['count'];
-$total_lab_tests = $conn->query("SELECT COUNT(*) as count FROM lab_tests WHERE status = 'active'")->fetch_assoc()['count'];
+$total_doctors = $conn->query("SELECT COUNT(*) as count FROM doctors WHERE cancel = '0'")->fetch_assoc()['count'];
+$total_medicines = $conn->query("SELECT COUNT(*) as count FROM medicines WHERE status = 'available'")->fetch_assoc()['count'];
+$total_lab_tests = $conn->query("SELECT COUNT(*) as count FROM laboratory WHERE cancel = '0'")->fetch_assoc()['count'];
 ?>
 
 <div class="card-container" style="display: flex; justify-content: space-around; flex-wrap: wrap;">
     <div class="card" style="width: 30%; text-align: center;">
-        <h4>Total Staff</h4>
-        <p style="font-size: 24px;"><?= $total_staff ?></p>
+        <h4>Total Doctors</h4>
+        <p style="font-size: 24px;"><?= $total_doctors ?></p>
     </div>
     <div class="card" style="width: 30%; text-align: center;">
         <h4>Total Medicines</h4>

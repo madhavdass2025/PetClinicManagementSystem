@@ -14,30 +14,30 @@ require_once '../includes/db_connect.php';
                 <th>ID</th>
                 <th>Name</th>
                 <th>Description</th>
-                <th>Cost</th>
+                <th>Amount</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
             <?php
-            $sql = "SELECT * FROM grooming_services WHERE status = 'active' ORDER BY id DESC";
+            $sql = "SELECT * FROM grooming WHERE cancel = '0' ORDER BY GId DESC";
             $result = $conn->query($sql);
 
             if ($result->num_rows > 0) {
                 while ($row = $result->fetch_assoc()) {
                     echo "<tr>";
-                    echo "<td>" . $row['id'] . "</td>";
+                    echo "<td>" . $row['GId'] . "</td>";
                     echo "<td>" . htmlspecialchars($row['name']) . "</td>";
                     echo "<td>" . htmlspecialchars($row['description']) . "</td>";
-                    echo "<td>" . number_format($row['cost'], 2) . "</td>";
+                    echo "<td>" . htmlspecialchars($row['amount']) . "</td>";
                     echo '<td>
-                            <a href="grooming_edit.php?id=' . $row['id'] . '" class="btn btn-primary">Edit</a>
-                            <a href="grooming_delete.php?id=' . $row['id'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this service?\')">Delete</a>
+                            <a href="grooming_edit.php?id=' . $row['GId'] . '" class="btn btn-primary">Edit</a>
+                            <a href="grooming_delete.php?id=' . $row['GId'] . '" class="btn btn-danger" onclick="return confirm(\'Are you sure you want to delete this service?\')">Delete</a>
                           </td>';
                     echo "</tr>";
                 }
             } else {
-                echo "<tr><td colspan='5'>No active grooming services found.</td></tr>";
+                echo "<tr><td colspan='4'>No active grooming services found.</td></tr>";
             }
             ?>
         </tbody>

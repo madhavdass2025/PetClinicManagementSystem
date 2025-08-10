@@ -4,15 +4,17 @@ require_once '../includes/db_connect.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
-    $details = $_POST['details'];
-    $cost = $_POST['cost'];
+    $amount = $_POST['amount'];
+    $type = $_POST['type'];
+    $duration = $_POST['duration'];
+    $submittedBy = $_SESSION['username'];
 
-    $sql = "INSERT INTO vaccinations (name, details, cost) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO vaccination (name, amount, type, duration, submittedBy) VALUES (?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssd", $name, $details, $cost);
+    $stmt->bind_param("sssss", $name, $amount, $type, $duration, $submittedBy);
 
     if ($stmt->execute()) {
-        echo "<script>alert('New vaccination added successfully'); window.location.href='vaccinations.php';</script>";
+        echo "<script>alert('New vaccination added successfully'); window.location.href='vaccination.php';</script>";
     } else {
         echo "Error: " . $stmt->error;
     }
@@ -28,12 +30,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="text" id="name" name="name" required>
         </div>
         <div class="input-group">
-            <label for="details">Details</label>
-            <textarea id="details" name="details" rows="4"></textarea>
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" required>
         </div>
         <div class="input-group">
-            <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
+            <label for="type">Type (e.g., DOG, CAT)</label>
+            <input type="text" id="type" name="type">
+        </div>
+        <div class="input-group">
+            <label for="duration">Duration (in days)</label>
+            <input type="text" id="duration" name="duration" required>
         </div>
         <button type="submit" class="btn btn-success">Add Vaccination</button>
     </form>

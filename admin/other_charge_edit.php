@@ -14,7 +14,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $sql = "UPDATE other_charges SET name=?, cost=? WHERE id=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("sdi", $name, $cost, $charge_id);
+    $stmt->bind_param("ssi", $name, $cost, $charge_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Charge updated successfully'); window.location.href='other_charges.php';</script>";
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current charge data
-$sql = "SELECT * FROM other_charges WHERE id = ? AND status = 'active'";
+$sql = "SELECT * FROM other_charges WHERE id = ? AND cancel = '0'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $charge_id);
 $stmt->execute();
@@ -46,7 +46,7 @@ $charge = $result->fetch_assoc();
         </div>
         <div class="input-group">
             <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $charge['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
+            <input type="text" id="cost" name="cost" value="<?= htmlspecialchars($charge['cost']) ?>" required>
         </div>
         <button type="submit" class="btn btn-primary">Update Charge</button>
     </form>

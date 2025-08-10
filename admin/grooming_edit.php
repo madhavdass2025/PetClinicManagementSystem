@@ -6,16 +6,16 @@ if (!isset($_GET['id'])) {
     header("Location: grooming.php");
     exit();
 }
-$service_id = $_GET['id'];
+$grooming_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $description = $_POST['description'];
-    $cost = $_POST['cost'];
+    $amount = $_POST['amount'];
 
-    $sql = "UPDATE grooming_services SET name=?, description=?, cost=? WHERE id=?";
+    $sql = "UPDATE grooming SET name=?, description=?, amount=? WHERE GId=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssdi", $name, $description, $cost, $service_id);
+    $stmt->bind_param("sssi", $name, $description, $amount, $grooming_id);
 
     if ($stmt->execute()) {
         echo "<script>alert('Grooming service updated successfully'); window.location.href='grooming.php';</script>";
@@ -25,9 +25,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 // Fetch current grooming service data
-$sql = "SELECT * FROM grooming_services WHERE id = ? AND status = 'active'";
+$sql = "SELECT * FROM grooming WHERE GId = ? AND cancel = '0'";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $service_id);
+$stmt->bind_param("i", $grooming_id);
 $stmt->execute();
 $result = $stmt->get_result();
 if ($result->num_rows === 0) {
@@ -40,7 +40,7 @@ $service = $result->fetch_assoc();
 <h2>Edit Grooming Service</h2>
 
 <div class="card">
-    <form action="grooming_edit.php?id=<?= $service_id ?>" method="post">
+    <form action="grooming_edit.php?id=<?= $grooming_id ?>" method="post">
         <div class="input-group">
             <label for="name">Service Name</label>
             <input type="text" id="name" name="name" value="<?= htmlspecialchars($service['name']) ?>" required>
@@ -50,8 +50,8 @@ $service = $result->fetch_assoc();
             <textarea id="description" name="description" rows="4"><?= htmlspecialchars($service['description']) ?></textarea>
         </div>
         <div class="input-group">
-            <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $service['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" value="<?= htmlspecialchars($service['amount']) ?>" required>
         </div>
         <button type="submit" class="btn btn-primary">Update Service</button>
     </form>

@@ -5,14 +5,15 @@ require_once '../includes/db_connect.php';
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
     $description = $_POST['description'];
-    $cost = $_POST['cost'];
+    $amount = $_POST['amount'];
+    $submittedBy = $_SESSION['username'];
 
-    $sql = "INSERT INTO lab_tests (name, description, cost) VALUES (?, ?, ?)";
+    $sql = "INSERT INTO laboratory (name, description, amount, submittedBy) VALUES (?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssd", $name, $description, $cost);
+    $stmt->bind_param("ssss", $name, $description, $amount, $submittedBy);
 
     if ($stmt->execute()) {
-        echo "<script>alert('New lab test added successfully'); window.location.href='lab_tests.php';</script>";
+        echo "<script>alert('New lab test added successfully'); window.location.href='laboratory.php';</script>";
     } else {
         echo "Error: " . $stmt->error;
     }
@@ -22,7 +23,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <h2>Add New Lab Test</h2>
 
 <div class="card">
-    <form action="lab_test_add.php" method="post">
+    <form action="laboratory_add.php" method="post">
         <div class="input-group">
             <label for="name">Test Name</label>
             <input type="text" id="name" name="name" required>
@@ -32,8 +33,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <textarea id="description" name="description" rows="4"></textarea>
         </div>
         <div class="input-group">
-            <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" required>
         </div>
         <button type="submit" class="btn btn-success">Add Lab Test</button>
     </form>

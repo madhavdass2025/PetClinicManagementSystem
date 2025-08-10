@@ -3,35 +3,36 @@ include 'includes/header.php';
 require_once '../includes/db_connect.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: vaccinations.php");
+    header("Location: vaccination.php");
     exit();
 }
 $vaccination_id = $_GET['id'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = $_POST['name'];
-    $details = $_POST['details'];
-    $cost = $_POST['cost'];
+    $amount = $_POST['amount'];
+    $type = $_POST['type'];
+    $duration = $_POST['duration'];
 
-    $sql = "UPDATE vaccinations SET name=?, details=?, cost=? WHERE id=?";
+    $sql = "UPDATE vaccination SET name=?, amount=?, type=?, duration=? WHERE VId=?";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssdi", $name, $details, $cost, $vaccination_id);
+    $stmt->bind_param("ssssi", $name, $amount, $type, $duration, $vaccination_id);
 
     if ($stmt->execute()) {
-        echo "<script>alert('Vaccination updated successfully'); window.location.href='vaccinations.php';</script>";
+        echo "<script>alert('Vaccination updated successfully'); window.location.href='vaccination.php';</script>";
     } else {
         echo "Error: " . $stmt->error;
     }
 }
 
 // Fetch current vaccination data
-$sql = "SELECT * FROM vaccinations WHERE id = ? AND status = 'active'";
+$sql = "SELECT * FROM vaccination WHERE VId = ? AND cancel = '0'";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $vaccination_id);
 $stmt->execute();
 $result = $stmt->get_result();
 if ($result->num_rows === 0) {
-    header("Location: vaccinations.php?error=Vaccination not found");
+    header("Location: vaccination.php?error=Vaccination not found");
     exit();
 }
 $vaccination = $result->fetch_assoc();
@@ -46,12 +47,16 @@ $vaccination = $result->fetch_assoc();
             <input type="text" id="name" name="name" value="<?= htmlspecialchars($vaccination['name']) ?>" required>
         </div>
         <div class="input-group">
-            <label for="details">Details</label>
-            <textarea id="details" name="details" rows="4"><?= htmlspecialchars($vaccination['details']) ?></textarea>
+            <label for="amount">Amount</label>
+            <input type="text" id="amount" name="amount" value="<?= htmlspecialchars($vaccination['amount']) ?>" required>
         </div>
         <div class="input-group">
-            <label for="cost">Cost</label>
-            <input type="text" id="cost" name="cost" value="<?= $vaccination['cost'] ?>" required pattern="[0-9]+(\.[0-9]{1,2})?" title="Please enter a valid price">
+            <label for="type">Type (e.g., DOG, CAT)</label>
+            <input type="text" id="type" name="type" value="<?= htmlspecialchars($vaccination['type']) ?>">
+        </div>
+        <div class="input-group">
+            <label for="duration">Duration (in days)</label>
+            <input type="text" id="duration" name="duration" value="<?= htmlspecialchars($vaccination['duration']) ?>" required>
         </div>
         <button type="submit" class="btn btn-primary">Update Vaccination</button>
     </form>

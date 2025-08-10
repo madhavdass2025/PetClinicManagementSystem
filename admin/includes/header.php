@@ -23,12 +23,14 @@ $current_page = basename($_SERVER['PHP_SELF']);
         <h3>Admin Panel</h3>
         <ul>
             <li><a href="dashboard.php" class="<?= $current_page == 'dashboard.php' ? 'active' : '' ?>">Dashboard</a></li>
+            <li><a href="users.php" class="<?= $current_page == 'users.php' ? 'active' : '' ?>">Users</a></li>
+            <li><a href="doctors.php" class="<?= $current_page == 'doctors.php' ? 'active' : '' ?>">Doctors</a></li>
             <li><a href="medicines.php" class="<?= $current_page == 'medicines.php' ? 'active' : '' ?>">Medicines</a></li>
-            <li><a href="lab_tests.php" class="<?= $current_page == 'lab_tests.php' ? 'active' : '' ?>">Lab Tests</a></li>
+            <li><a href="laboratory.php" class="<?= $current_page == 'laboratory.php' ? 'active' : '' ?>">Lab Tests</a></li>
             <li><a href="grooming.php" class="<?= $current_page == 'grooming.php' ? 'active' : '' ?>">Grooming</a></li>
-            <li><a href="vaccinations.php" class="<?= $current_page == 'vaccinations.php' ? 'active' : '' ?>">Vaccinations</a></li>
+            <li><a href="vaccination.php" class="<?= $current_page == 'vaccination.php' ? 'active' : '' ?>">Vaccination</a></li>
+            <li><a href="surgery.php" class="<?= $current_page == 'surgery.php' ? 'active' : '' ?>">Surgery</a></li>
             <li><a href="other_charges.php" class="<?= $current_page == 'other_charges.php' ? 'active' : '' ?>">Other Charges</a></li>
-            <li><a href="staff.php" class="<?= $current_page == 'staff.php' ? 'active' : '' ?>">Staff</a></li>
         </ul>
     </div>
     <div class="main-content">

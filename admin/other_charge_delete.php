@@ -9,7 +9,7 @@ if (!isset($_GET['id'])) {
 $charge_id = $_GET['id'];
 
 // Soft delete the charge
-$sql = "UPDATE other_charges SET status = 'inactive' WHERE id = ?";
+$sql = "UPDATE other_charges SET cancel = '1' WHERE id = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $charge_id);
 

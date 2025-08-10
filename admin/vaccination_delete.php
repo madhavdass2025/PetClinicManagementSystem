@@ -3,19 +3,19 @@ require_once '../includes/db_connect.php';
 include 'includes/header.php';
 
 if (!isset($_GET['id'])) {
-    header("Location: vaccinations.php");
+    header("Location: vaccination.php");
     exit();
 }
 $vaccination_id = $_GET['id'];
 
 // Soft delete the vaccination
-$sql = "UPDATE vaccinations SET status = 'inactive' WHERE id = ?";
+$sql = "UPDATE vaccination SET cancel = '1' WHERE VId = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $vaccination_id);
 
 if ($stmt->execute()) {
-    header("Location: vaccinations.php?message=Vaccination deleted successfully");
+    header("Location: vaccination.php?message=Vaccination deleted successfully");
 } else {
-    header("Location: vaccinations.php?error=Error deleting vaccination: " . $stmt->error);
+    header("Location: vaccination.php?error=Error deleting vaccination: " . $stmt->error);
 }
 ?>

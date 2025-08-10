@@ -1,6 +1,6 @@
 <?php
 require_once '../includes/db_connect.php';
-include 'includes/header.php'; // To use session check
+include 'includes/header.php';
 
 if (!isset($_GET['id'])) {
     header("Location: medicines.php");
@@ -8,8 +8,8 @@ if (!isset($_GET['id'])) {
 }
 $medicine_id = $_GET['id'];
 
-// Soft delete the medicine by updating its status to 'inactive'
-$sql = "UPDATE medicines SET status = 'inactive' WHERE id = ?";
+// Soft delete the medicine by updating its status to 'unavailable'
+$sql = "UPDATE medicines SET status = 'unavailable' WHERE Mid = ?";
 $stmt = $conn->prepare($sql);
 $stmt->bind_param("i", $medicine_id);
 
